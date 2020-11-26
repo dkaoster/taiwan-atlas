@@ -1,0 +1,46 @@
+{
+  "name": "taiwan-atlas",
+  "version": "0.0.0",
+  "description": "現成 TopoJSON 來自於中華民國內政部",
+  "main": "mercatorTw.cjs.js",
+  "jsnext:main": "mercatorTw.es.js",
+  "files": [
+    "*-10m.json",
+    "mercatorTw.cjs.js",
+    "mercatorTw.es.js",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "rimraf mercatorTw.cjs.js mercatorTw.es.js",
+    "build": "npm run clean && npm run build:cjs && npm run build:es",
+    "build:cjs": "rollup -c -o mercatorTw.cjs.js -f cjs",
+    "build:es": "rollup -c -o mercatorTw.es.js -f es",
+    "prepublishOnly": "npm run build && bash prepublish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkaoster/taiwan-atlas.git"
+  },
+  "author": {
+    "name": "Daniel Kao",
+    "url": "https://www.diplateevo.com/"
+  },
+  "license": "MIT",
+  "keywords": [
+    "topojson",
+    "geojson",
+    "shapefile"
+  ],
+  "bugs": {
+    "url": "https://github.com/dkaoster/taiwan-atlas/issues"
+  },
+  "homepage": "https://github.com/dkaoster/taiwan-atlas#readme",
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "rollup": "^2.33.3",
+    "shapefile": "^0.6.6",
+    "topojson-client": "^3.1.0",
+    "topojson-server": "^3.0.1",
+    "topojson-simplify": "^3.0.3"
+  }
+}

@@ -1,0 +1,5 @@
+build/
+node_modules
+*-10m.json
+*.es.js
+*.cjs.js
