@@ -15,7 +15,7 @@
     "build": "npm run clean && npm run build:cjs && npm run build:es",
     "build:cjs": "rollup -c -o mercatorTw.cjs.js -f cjs",
     "build:es": "rollup -c -o mercatorTw.es.js -f es",
-    "prepublishOnly": "npm run build && bash prepublish"
+    "prepublishOnly": "npm run build && bash prepublish.sh"
   },
   "repository": {
     "type": "git",
