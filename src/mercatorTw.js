@@ -102,26 +102,33 @@ export default () => {
     mainlandPoint = mainland
       .translate(args[0])
       .clipExtent([
-        [x - (80 / defaultScale) * k, y - (100 / defaultScale) * k],
-        [x + (80 / defaultScale) * k, y + (100 / defaultScale) * k],
+        [x - (60 / defaultScale) * k, y - (100 / defaultScale) * k],
+        [x + (60 / defaultScale) * k, y + (100 / defaultScale) * k],
+      ])
+      .stream(pointStream);
+
+    kinmenPoint = kinmen
+      .translate([x - (70 / defaultScale) * k, y])
+      .clipExtent([
+        [x - ((20 + 70) / defaultScale) * k + epsilon, y - (10 / defaultScale) * k + epsilon],
+        [x + ((20 - 70) / defaultScale) * k - epsilon, y + (10 / defaultScale) * k - epsilon]])
+      .stream(pointStream);
+
+    lienchiangPoint = lienchiang
+      .translate([x - (50 / defaultScale) * k, y - (60 / defaultScale) * k])
+      .clipExtent([
+        [
+          x - ((20 + 50) / defaultScale) * k + epsilon,
+          y - ((20 + 60) / defaultScale) * k + epsilon,
+        ],
+        [
+          x + ((20 - 50) / defaultScale) * k - epsilon,
+          y + ((20 - 60) / defaultScale) * k - epsilon,
+        ],
       ])
       .stream(pointStream);
 
     // TODO Fix
-    kinmenPoint = kinmen
-      .translate([x - 0 * k, y + 0 * k])
-      .clipExtent([
-        [x - 0 * k + epsilon, y + 0 * k + epsilon],
-        [x - 0 * k - epsilon, y + 0 * k - epsilon]])
-      .stream(pointStream);
-
-    lienchiangPoint = lienchiang
-      .translate([x - 0 * k, y + 0 * k])
-      .clipExtent([
-        [x - 0 * k + epsilon, y + 0 * k + epsilon],
-        [x - 0 * k - epsilon, y + 0 * k - epsilon]])
-      .stream(pointStream);
-
     wuqiuPoint = wuqiu
       .translate([x - 0 * k, y + 0 * k])
       .clipExtent([
@@ -135,5 +142,5 @@ export default () => {
   mercatorTw.fitExtent = (extent, object) => fitExtent(mercatorTw, extent, object);
   mercatorTw.fitSize = (size, object) => fitSize(mercatorTw, size, object);
 
-  return mercatorTw.scale(defaultScale);
+  return mercatorTw.scale(defaultScale).translate([80, 90]);
 };
