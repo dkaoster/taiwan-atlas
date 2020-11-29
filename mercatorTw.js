@@ -1,9 +1,7 @@
 /* eslint-disable no-plusplus */
-import { mercator } from 'd3-geo';
 import {
-  fitExtent, fitSize, fitWidth, fitHeight,
-} from 'd3-geo/src/projection/fit';
-import { epsilon } from 'd3-geo/src/math';
+  geoMercator, fitExtent, fitSize, fitWidth, fitHeight, epsilon,
+} from 'd3-geo';
 
 // The projections must have mutually exclusive clip regions on the sphere,
 // as this will avoid emitting interleaving lines and polygons.
@@ -28,10 +26,10 @@ export default () => {
   let cache;
   let cacheStream;
 
-  const mainland = mercator(); let mainlandPoint;
-  const kinmen = mercator().center([-2, 58.5]).parallels([55, 65]); let kinmenPoint;
-  const lienchiang = mercator().center([-3, 19.9]).parallels([8, 18]); let lienchiangPoint;
-  const wuqiu = mercator().center([-3, 19.9]).parallels([8, 18]); let wuqiuPoint;
+  const mainland = geoMercator(); let mainlandPoint;
+  const kinmen = geoMercator().center([-2, 58.5]); let kinmenPoint;
+  const lienchiang = geoMercator().center([-3, 19.9]); let lienchiangPoint;
+  const wuqiu = geoMercator().center([-3, 19.9]); let wuqiuPoint;
 
   let point;
   const pointStream = { point(x, y) { point = [x, y]; } };

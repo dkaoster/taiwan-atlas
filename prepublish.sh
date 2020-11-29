@@ -45,3 +45,15 @@ mapshaper -i villages-10t.json -drop target=towns,villages -o format=topojson ta
 
 # Use mapshaper to remove layers of detail we don't want for nation
 mapshaper -i villages-10t.json -drop target=towns,villages,counties -o format=topojson target=* nation-10t.json
+
+# Use mapshaper to project onto
+geo2topo -n villages=<( \
+    shp2json -n --encoding=UTF-8 build/VILLAGE*.shp \
+      | ndjson-filter '!!d.properties.VILLNAME' \
+      | ndjson-map '(delete d.properties.NOTE, d)' \
+      | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw().scale(1300).translate([487.5, 305])') \
+  | topomerge towns=villages -k 'd.properties.TOWNCODE' \
+  | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
+  | topomerge nation=counties \
+  | toposimplify -f -s 1e-10 \
+  > base-mercator.json

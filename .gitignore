@@ -2,5 +2,6 @@ build/
 node_modules
 *-10t.json
 base.json
+base-mercator.json
 *.es.js
 *.cjs.js

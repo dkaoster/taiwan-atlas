@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/dkaoster/taiwan-atlas#readme",
   "devDependencies": {
+    "d3-geo-projection": "^3.0.0",
     "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
