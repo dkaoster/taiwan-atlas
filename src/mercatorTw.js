@@ -1,7 +1,9 @@
 /* eslint-disable no-plusplus */
-import {
-  geoMercator, fitExtent, fitSize, fitWidth, fitHeight, epsilon,
-} from 'd3-geo';
+import { geoMercator } from 'd3-geo';
+import { epsilon } from './math';
+import { fitExtent, fitSize } from './fit';
+
+const defaultScale = 3000;
 
 // The projections must have mutually exclusive clip regions on the sphere,
 // as this will avoid emitting interleaving lines and polygons.
@@ -19,17 +21,16 @@ function multiplex(streams) {
 
 // A composite projection for Taiwan, configured by default for
 // 960×500. The projection also works quite well at 960×600 if you change the
-// scale to 1285 and adjust the translate accordingly. The set of standard
-// parallels for each region comes from USGS, which is published here:
-// http://egsc.usgs.gov/isb/pubs/MapProjections/projections.html#albers
+// scale to 1285 and adjust the translate accordingly.
 export default () => {
   let cache;
   let cacheStream;
 
-  const mainland = geoMercator(); let mainlandPoint;
-  const kinmen = geoMercator().center([-2, 58.5]); let kinmenPoint;
-  const lienchiang = geoMercator().center([-3, 19.9]); let lienchiangPoint;
-  const wuqiu = geoMercator().center([-3, 19.9]); let wuqiuPoint;
+  // Longitude and latitude coordinates of their centers
+  const mainland = geoMercator().rotate([-120.97, -23.6]); let mainlandPoint;
+  const kinmen = geoMercator().rotate([-118.33, -24.44]); let kinmenPoint;
+  const lienchiang = geoMercator().rotate([-120.2245113, -26.162376]); let lienchiangPoint;
+  const wuqiu = geoMercator().rotate([-119.45, -24.98]); let wuqiuPoint;
 
   let point;
   const pointStream = { point(x, y) { point = [x, y]; } };
@@ -96,31 +97,36 @@ export default () => {
     const x = +args[0][0];
     const y = +args[0][1];
 
+    // Takes the bbox difference between the corner and the center to
+    // determine where to clip.
     mainlandPoint = mainland
       .translate(args[0])
-      .clipExtent([[x - 0.455 * k, y - 0.238 * k], [x + 0.455 * k, y + 0.238 * k]])
+      .clipExtent([
+        [x - (80 / defaultScale) * k, y - (100 / defaultScale) * k],
+        [x + (80 / defaultScale) * k, y + (100 / defaultScale) * k],
+      ])
       .stream(pointStream);
 
     // TODO Fix
     kinmenPoint = kinmen
-      .translate([x - 0.307 * k, y + 0.201 * k])
+      .translate([x - 0 * k, y + 0 * k])
       .clipExtent([
-        [x - 0.425 * k + epsilon, y + 0.120 * k + epsilon],
-        [x - 0.214 * k - epsilon, y + 0.234 * k - epsilon]])
+        [x - 0 * k + epsilon, y + 0 * k + epsilon],
+        [x - 0 * k - epsilon, y + 0 * k - epsilon]])
       .stream(pointStream);
 
     lienchiangPoint = lienchiang
-      .translate([x - 0.205 * k, y + 0.212 * k])
+      .translate([x - 0 * k, y + 0 * k])
       .clipExtent([
-        [x - 0.214 * k + epsilon, y + 0.166 * k + epsilon],
-        [x - 0.115 * k - epsilon, y + 0.234 * k - epsilon]])
+        [x - 0 * k + epsilon, y + 0 * k + epsilon],
+        [x - 0 * k - epsilon, y + 0 * k - epsilon]])
       .stream(pointStream);
 
     wuqiuPoint = wuqiu
-      .translate([x - 0.205 * k, y + 0.212 * k])
+      .translate([x - 0 * k, y + 0 * k])
       .clipExtent([
-        [x - 0.214 * k + epsilon, y + 0.166 * k + epsilon],
-        [x - 0.115 * k - epsilon, y + 0.234 * k - epsilon]])
+        [x - 0 * k + epsilon, y + 0 * k + epsilon],
+        [x - 0 * k - epsilon, y + 0 * k - epsilon]])
       .stream(pointStream);
 
     return reset();
@@ -128,8 +134,6 @@ export default () => {
 
   mercatorTw.fitExtent = (extent, object) => fitExtent(mercatorTw, extent, object);
   mercatorTw.fitSize = (size, object) => fitSize(mercatorTw, size, object);
-  mercatorTw.fitWidth = (width, object) => fitWidth(mercatorTw, width, object);
-  mercatorTw.fitHeight = (height, object) => fitHeight(mercatorTw, height, object);
 
-  return mercatorTw.scale(1070);
+  return mercatorTw.scale(defaultScale);
 };
