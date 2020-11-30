@@ -9,7 +9,7 @@ villageShpUrl=$(curl -Ls https://data.gov.tw/dataset/7438 | \
   # Find the link that has the SHP tag
   grep -io '<a[^<]*SHP</a>' | \
   # get the href tag
-  sed -r 's/.*href="([^"]+).*/\1/g')
+  sed -E 's/.*href="([^"]+).*/\1/g')
 
 # Download and extract the archives
 if [ ! -f build/*.shp ]; then
