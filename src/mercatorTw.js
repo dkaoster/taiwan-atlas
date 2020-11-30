@@ -27,9 +27,10 @@ export default () => {
   let cacheStream;
 
   // Longitude and latitude coordinates of their centers
-  const mainland = geoMercator().rotate([-120.97, -23.6]); let mainlandPoint;
+  const mainland = geoMercator().rotate([-120.97, -23.60]); let mainlandPoint;
+  const penghu = geoMercator().rotate([-119.54, -23.45]); let penghuPoint;
   const kinmen = geoMercator().rotate([-118.33, -24.44]); let kinmenPoint;
-  const lienchiang = geoMercator().rotate([-120.2245113, -26.162376]); let lienchiangPoint;
+  const lienchiang = geoMercator().rotate([-120.22, -26.16]); let lienchiangPoint;
   const wuqiu = geoMercator().rotate([-119.45, -24.98]); let wuqiuPoint;
 
   let point;
@@ -40,6 +41,7 @@ export default () => {
     const y = coordinates[1];
     point = null;
     return (mainlandPoint.point(x, y), point)
+      || (penghuPoint.point(x, y), point)
       || (kinmenPoint.point(x, y), point)
       || (lienchiangPoint.point(x, y), point)
       || (wuqiuPoint.point(x, y), point);
@@ -68,6 +70,7 @@ export default () => {
     ? cache
     : cache = multiplex([
       mainland.stream(cacheStream = stream),
+      penghu.stream(stream),
       kinmen.stream(stream),
       lienchiang.stream(stream),
       wuqiu.stream(stream),
@@ -76,6 +79,7 @@ export default () => {
   mercatorTw.precision = (...args) => {
     if (!args.length) return mainland.precision();
     mainland.precision(args[0]);
+    penghu.precision(args[0]);
     kinmen.precision(args[0]);
     lienchiang.precision(args[0]);
     wuqiu.precision(args[0]);
@@ -85,6 +89,7 @@ export default () => {
   mercatorTw.scale = (...args) => {
     if (!args.length) return mainland.scale();
     mainland.scale(args[0]);
+    penghu.scale(args[0]);
     kinmen.scale(args[0]);
     lienchiang.scale(args[0]);
     wuqiu.scale(args[0]);
@@ -107,6 +112,19 @@ export default () => {
       ])
       .stream(pointStream);
 
+    penghuPoint = penghu
+      .translate([x - (70 / defaultScale) * k, y + (60 / defaultScale) * k])
+      .clipExtent([
+        [
+          x - ((15 + 70) / defaultScale) * k + epsilon,
+          y - ((15 - 60) / defaultScale) * k + epsilon,
+        ],
+        [
+          x + ((15 - 70) / defaultScale) * k - epsilon,
+          y + ((15 + 60) / defaultScale) * k - epsilon,
+        ]])
+      .stream(pointStream);
+
     kinmenPoint = kinmen
       .translate([x - (70 / defaultScale) * k, y])
       .clipExtent([
@@ -115,25 +133,24 @@ export default () => {
       .stream(pointStream);
 
     lienchiangPoint = lienchiang
-      .translate([x - (50 / defaultScale) * k, y - (60 / defaultScale) * k])
+      .translate([x - (60 / defaultScale) * k, y - (60 / defaultScale) * k])
       .clipExtent([
         [
-          x - ((20 + 50) / defaultScale) * k + epsilon,
+          x - ((20 + 60) / defaultScale) * k + epsilon,
           y - ((20 + 60) / defaultScale) * k + epsilon,
         ],
         [
-          x + ((20 - 50) / defaultScale) * k - epsilon,
+          x + ((20 - 60) / defaultScale) * k - epsilon,
           y + ((20 - 60) / defaultScale) * k - epsilon,
         ],
       ])
       .stream(pointStream);
 
-    // TODO Fix
     wuqiuPoint = wuqiu
-      .translate([x - 0 * k, y + 0 * k])
+      .translate([x - (60 / defaultScale) * k, y - (5 / defaultScale) * k])
       .clipExtent([
-        [x - 0 * k + epsilon, y + 0 * k + epsilon],
-        [x - 0 * k - epsilon, y + 0 * k - epsilon]])
+        [x - ((5 + 60) / defaultScale) * k + epsilon, y - ((5 + 5) / defaultScale) * k + epsilon],
+        [x + ((5 - 60) / defaultScale) * k - epsilon, y + ((5 - 5) / defaultScale) * k - epsilon]])
       .stream(pointStream);
 
     return reset();
