@@ -12,8 +12,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "generate:img-counties": "topo2geo -i counties=counties-mercator-10t.json | geo2svg -o img/counties-mercator-10t.svg",
-    "generate:img": "npm run build && bash prepublish.sh && npm run generate:img-counties",
+    "generate:img": "npm run build && bash prepublish.sh && bash generateimg.sh",
     "clean": "rimraf mercatorTw.cjs.js mercatorTw.es.js",
     "build": "npm run clean && npm run build:cjs && npm run build:es",
     "build:cjs": "rollup -c -o mercatorTw.cjs.js -f cjs",
