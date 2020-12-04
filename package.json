@@ -47,6 +47,7 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.33.3",
     "shapefile": "^0.6.6",
+    "svgexport": "^0.4.1",
     "topojson-client": "^3.1.0",
     "topojson-server": "^3.0.1",
     "topojson-simplify": "^3.0.3"
