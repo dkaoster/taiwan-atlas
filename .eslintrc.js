@@ -7,4 +7,7 @@ module.exports = {
     es6: true,
   },
   extends: ['eslint-config-airbnb-base'],
+  rules: {
+    'no-nested-ternary': 0,
+  },
 };

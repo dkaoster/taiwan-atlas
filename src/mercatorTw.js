@@ -3,7 +3,26 @@ import { geoMercator } from 'd3-geo';
 import { epsilon } from './math';
 import { fitExtent, fitSize } from './fit';
 
-const defaultScale = 3000;
+const defaultScale = 10000;
+
+// Geo coordinates for projection boxes given defaultScale of 10000.
+const geoCoordinates = {
+  mainland: {
+    width: 360, height: 600, offsetX: 0, offsetY: 0,
+  },
+  penghu: {
+    width: 90, height: 90, offsetX: -210, offsetY: 180,
+  },
+  kinmen: {
+    width: 120, height: 60, offsetX: -210, offsetY: 0,
+  },
+  lienchiang: {
+    width: 120, height: 120, offsetX: -180, offsetY: -180,
+  },
+  wuqiu: {
+    width: 30, height: 30, offsetX: -180, offsetY: -15,
+  },
+};
 
 // The projections must have mutually exclusive clip regions on the sphere,
 // as this will avoid emitting interleaving lines and polygons.
@@ -19,9 +38,7 @@ function multiplex(streams) {
   };
 }
 
-// A composite projection for Taiwan, configured by default for
-// 960×500. The projection also works quite well at 960×600 if you change the
-// scale to 1285 and adjust the translate accordingly.
+// A composite projection for Taiwan, configured by default for 450x600.
 export default () => {
   let cache;
   let cacheStream;
@@ -58,11 +75,18 @@ export default () => {
     const t = mainland.translate();
     const x = (coordinates[0] - t[0]) / k;
     const y = (coordinates[1] - t[1]) / k;
-    // TODO fix
-    // eslint-disable-next-line no-nested-ternary
-    return (y >= 0.120 && y < 0.234 && x >= -0.425 && x < -0.214 ? kinmen
-      : y >= 0.166 && y < 0.234 && x >= -0.214 && x < -0.115 ? lienchiang
-        : mainland).invert(coordinates);
+
+    const isInBounds = (obj) => y >= (obj.offsetY - obj.height / 2) / defaultScale
+      && y < (obj.offsetY + obj.height / 2) / defaultScale
+      && x >= (obj.offsetX - obj.width / 2) / defaultScale
+      && x < (obj.offsetX + obj.width / 2) / defaultScale;
+
+    if (isInBounds(geoCoordinates.wuqiu)) return wuqiu.invert(coordinates);
+    if (isInBounds(geoCoordinates.kinmen)) return kinmen.invert(coordinates);
+    if (isInBounds(geoCoordinates.lienchiang)) return lienchiang.invert(coordinates);
+    if (isInBounds(geoCoordinates.penghu)) return penghu.invert(coordinates);
+
+    return mainland.invert(coordinates);
   };
 
   // eslint-disable-next-line no-return-assign
@@ -102,55 +126,47 @@ export default () => {
     const x = +args[0][0];
     const y = +args[0][1];
 
+    const genTranslate = (obj) => [
+      x + (obj.offsetX / defaultScale) * k,
+      y + (obj.offsetY / defaultScale) * k,
+    ];
+
+    const genClipExtent = (obj) => [
+      [
+        x - (((obj.width / 2) - obj.offsetX) / defaultScale) * k + epsilon,
+        y - (((obj.height / 2) - obj.offsetY) / defaultScale) * k + epsilon,
+      ],
+      [
+        x + (((obj.width / 2) + obj.offsetX) / defaultScale) * k - epsilon,
+        y + (((obj.height / 2) + obj.offsetY) / defaultScale) * k - epsilon,
+      ],
+    ];
+
     // Takes the bbox difference between the corner and the center to
     // determine where to clip.
     mainlandPoint = mainland
-      .translate(args[0])
-      .clipExtent([
-        [x - (60 / defaultScale) * k, y - (100 / defaultScale) * k],
-        [x + (60 / defaultScale) * k, y + (100 / defaultScale) * k],
-      ])
+      .translate(genTranslate(geoCoordinates.mainland))
+      .clipExtent(genClipExtent(geoCoordinates.mainland))
       .stream(pointStream);
 
     penghuPoint = penghu
-      .translate([x - (70 / defaultScale) * k, y + (60 / defaultScale) * k])
-      .clipExtent([
-        [
-          x - ((15 + 70) / defaultScale) * k + epsilon,
-          y - ((15 - 60) / defaultScale) * k + epsilon,
-        ],
-        [
-          x + ((15 - 70) / defaultScale) * k - epsilon,
-          y + ((15 + 60) / defaultScale) * k - epsilon,
-        ]])
+      .translate(genTranslate(geoCoordinates.penghu))
+      .clipExtent(genClipExtent(geoCoordinates.penghu))
       .stream(pointStream);
 
     kinmenPoint = kinmen
-      .translate([x - (70 / defaultScale) * k, y])
-      .clipExtent([
-        [x - ((20 + 70) / defaultScale) * k + epsilon, y - (10 / defaultScale) * k + epsilon],
-        [x + ((20 - 70) / defaultScale) * k - epsilon, y + (10 / defaultScale) * k - epsilon]])
+      .translate(genTranslate(geoCoordinates.kinmen))
+      .clipExtent(genClipExtent(geoCoordinates.kinmen))
       .stream(pointStream);
 
     lienchiangPoint = lienchiang
-      .translate([x - (60 / defaultScale) * k, y - (60 / defaultScale) * k])
-      .clipExtent([
-        [
-          x - ((20 + 60) / defaultScale) * k + epsilon,
-          y - ((20 + 60) / defaultScale) * k + epsilon,
-        ],
-        [
-          x + ((20 - 60) / defaultScale) * k - epsilon,
-          y + ((20 - 60) / defaultScale) * k - epsilon,
-        ],
-      ])
+      .translate(genTranslate(geoCoordinates.lienchiang))
+      .clipExtent(genClipExtent(geoCoordinates.lienchiang))
       .stream(pointStream);
 
     wuqiuPoint = wuqiu
-      .translate([x - (60 / defaultScale) * k, y - (5 / defaultScale) * k])
-      .clipExtent([
-        [x - ((5 + 60) / defaultScale) * k + epsilon, y - ((5 + 5) / defaultScale) * k + epsilon],
-        [x + ((5 - 60) / defaultScale) * k - epsilon, y + ((5 - 5) / defaultScale) * k - epsilon]])
+      .translate(genTranslate(geoCoordinates.wuqiu))
+      .clipExtent(genClipExtent(geoCoordinates.wuqiu))
       .stream(pointStream);
 
     return reset();
@@ -159,5 +175,5 @@ export default () => {
   mercatorTw.fitExtent = (extent, object) => fitExtent(mercatorTw, extent, object);
   mercatorTw.fitSize = (size, object) => fitSize(mercatorTw, size, object);
 
-  return mercatorTw.scale(defaultScale).translate([80, 90]);
+  return mercatorTw.scale(defaultScale).translate([275, 300]);
 };
