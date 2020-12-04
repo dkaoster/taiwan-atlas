@@ -3,7 +3,7 @@ import { geoMercator } from 'd3-geo';
 import { epsilon } from './math';
 import { fitExtent, fitSize } from './fit';
 
-const defaultScale = 3000;
+const defaultScale = 10000;
 
 // The projections must have mutually exclusive clip regions on the sphere,
 // as this will avoid emitting interleaving lines and polygons.
@@ -107,50 +107,50 @@ export default () => {
     mainlandPoint = mainland
       .translate(args[0])
       .clipExtent([
-        [x - (60 / defaultScale) * k, y - (100 / defaultScale) * k],
-        [x + (60 / defaultScale) * k, y + (100 / defaultScale) * k],
+        [x - (180 / defaultScale) * k, y - (300 / defaultScale) * k],
+        [x + (180 / defaultScale) * k, y + (300 / defaultScale) * k],
       ])
       .stream(pointStream);
 
     penghuPoint = penghu
-      .translate([x - (70 / defaultScale) * k, y + (60 / defaultScale) * k])
+      .translate([x - (210 / defaultScale) * k, y + (180 / defaultScale) * k])
       .clipExtent([
         [
-          x - ((15 + 70) / defaultScale) * k + epsilon,
-          y - ((15 - 60) / defaultScale) * k + epsilon,
+          x - ((45 + 210) / defaultScale) * k + epsilon,
+          y - ((45 - 180) / defaultScale) * k + epsilon,
         ],
         [
-          x + ((15 - 70) / defaultScale) * k - epsilon,
-          y + ((15 + 60) / defaultScale) * k - epsilon,
+          x + ((45 - 210) / defaultScale) * k - epsilon,
+          y + ((45 + 180) / defaultScale) * k - epsilon,
         ]])
       .stream(pointStream);
 
     kinmenPoint = kinmen
-      .translate([x - (70 / defaultScale) * k, y])
+      .translate([x - (210 / defaultScale) * k, y])
       .clipExtent([
-        [x - ((20 + 70) / defaultScale) * k + epsilon, y - (10 / defaultScale) * k + epsilon],
-        [x + ((20 - 70) / defaultScale) * k - epsilon, y + (10 / defaultScale) * k - epsilon]])
+        [x - ((60 + 210) / defaultScale) * k + epsilon, y - (30 / defaultScale) * k + epsilon],
+        [x + ((60 - 210) / defaultScale) * k - epsilon, y + (30 / defaultScale) * k - epsilon]])
       .stream(pointStream);
 
     lienchiangPoint = lienchiang
-      .translate([x - (60 / defaultScale) * k, y - (60 / defaultScale) * k])
+      .translate([x - (180 / defaultScale) * k, y - (180 / defaultScale) * k])
       .clipExtent([
         [
-          x - ((20 + 60) / defaultScale) * k + epsilon,
-          y - ((20 + 60) / defaultScale) * k + epsilon,
+          x - ((60 + 180) / defaultScale) * k + epsilon,
+          y - ((60 + 180) / defaultScale) * k + epsilon,
         ],
         [
-          x + ((20 - 60) / defaultScale) * k - epsilon,
-          y + ((20 - 60) / defaultScale) * k - epsilon,
+          x + ((60 - 180) / defaultScale) * k - epsilon,
+          y + ((60 - 180) / defaultScale) * k - epsilon,
         ],
       ])
       .stream(pointStream);
 
     wuqiuPoint = wuqiu
-      .translate([x - (60 / defaultScale) * k, y - (5 / defaultScale) * k])
+      .translate([x - (180 / defaultScale) * k, y - (15 / defaultScale) * k])
       .clipExtent([
-        [x - ((5 + 60) / defaultScale) * k + epsilon, y - ((5 + 5) / defaultScale) * k + epsilon],
-        [x + ((5 - 60) / defaultScale) * k - epsilon, y + ((5 - 5) / defaultScale) * k - epsilon]])
+        [x - ((15 + 180) / defaultScale) * k + epsilon, y - ((15 + 15) / defaultScale) * k + epsilon],
+        [x + ((15 - 180) / defaultScale) * k - epsilon, y + ((15 - 15) / defaultScale) * k - epsilon]])
       .stream(pointStream);
 
     return reset();
@@ -159,5 +159,5 @@ export default () => {
   mercatorTw.fitExtent = (extent, object) => fitExtent(mercatorTw, extent, object);
   mercatorTw.fitSize = (size, object) => fitSize(mercatorTw, size, object);
 
-  return mercatorTw.scale(defaultScale).translate([80, 90]);
+  return mercatorTw.scale(defaultScale).translate([275, 300]);
 };
