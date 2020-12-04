@@ -128,8 +128,15 @@ export default () => {
     kinmenPoint = kinmen
       .translate([x - (210 / defaultScale) * k, y])
       .clipExtent([
-        [x - ((60 + 210) / defaultScale) * k + epsilon, y - (30 / defaultScale) * k + epsilon],
-        [x + ((60 - 210) / defaultScale) * k - epsilon, y + (30 / defaultScale) * k - epsilon]])
+        [
+          x - ((60 + 210) / defaultScale) * k + epsilon,
+          y - (30 / defaultScale) * k + epsilon,
+        ],
+        [
+          x + ((60 - 210) / defaultScale) * k - epsilon,
+          y + (30 / defaultScale) * k - epsilon,
+        ],
+      ])
       .stream(pointStream);
 
     lienchiangPoint = lienchiang
@@ -149,8 +156,15 @@ export default () => {
     wuqiuPoint = wuqiu
       .translate([x - (180 / defaultScale) * k, y - (15 / defaultScale) * k])
       .clipExtent([
-        [x - ((15 + 180) / defaultScale) * k + epsilon, y - ((15 + 15) / defaultScale) * k + epsilon],
-        [x + ((15 - 180) / defaultScale) * k - epsilon, y + ((15 - 15) / defaultScale) * k - epsilon]])
+        [
+          x - ((15 + 180) / defaultScale) * k + epsilon,
+          y - ((15 + 15) / defaultScale) * k + epsilon,
+        ],
+        [
+          x + ((15 - 180) / defaultScale) * k - epsilon,
+          y + ((15 - 15) / defaultScale) * k - epsilon,
+        ],
+      ])
       .stream(pointStream);
 
     return reset();
