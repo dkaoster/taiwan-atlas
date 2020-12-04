@@ -24,13 +24,13 @@ A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master
 
 <a href="#tw.objects.nation" name="tw.objects.nation">#</a> tw.objects<b>.nation</b>
 
-<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/nation.png" width="100%">
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/nation.png" width="50%">
 
 The nation object has no fields.
 
 <a href="#tw.objects.counties" name="tw.objects.counties">#</a> tw.objects<b>.counties</b>
 
-<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/counties.png" width="100%">
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/counties.png" width="50%">
 
 The county object has three fields:
 - county.properties.COUNTYNAME - The name of the county
@@ -39,7 +39,7 @@ The county object has three fields:
 
 <a href="#tw.objects.towns" name="tw.objects.towns">#</a> tw.objects<b>.towns</b>
 
-<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/towns.png" width="100%">
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/towns.png" width="50%">
 
 The town object has three fields in addition to the county fields:
 - town.properties.TOWNNAME - The name of the county
@@ -48,7 +48,7 @@ The town object has three fields in addition to the county fields:
 
 <a href="#tw.objects.villages" name="tw.objects.villages">#</a> tw.objects<b>.villages</b>
 
-<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/villages.png" width="100%">
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/villages.png" width="50%">
 
 The village object has three fields in addition to the town and county fields:
 - village.properties.VILLNAME - The name of the village
