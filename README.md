@@ -22,33 +22,33 @@ A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master
 
 A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master/README.md#21-topology-objects) containing the geometry collections <i>nation</i>. The geometry is quantized and simplified, but not projected. This topology is derived from the Ministry of the Interior’s [村里界圖(TWD97經緯度)](https://data.gov.tw/dataset/7438).
 
-<a href="#tw.objects.nation" name="tw.objects.nation">#</a> tw.objects<b>nation</b>
+<a href="#tw.objects.nation" name="tw.objects.nation">#</a> tw.objects<b>.nation</b>
 
-<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/nation.svg" width="130.09" height="178.35">
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/nation.png" width="100%">
 
 The nation object has no fields.
 
-<a href="#tw.objects.counties" name="tw.objects.counties">#</a> tw.objects<b>counties</b>
+<a href="#tw.objects.counties" name="tw.objects.counties">#</a> tw.objects<b>.counties</b>
 
-<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/counties.svg" width="130.09" height="178.35">
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/counties.png" width="100%">
 
 The county object has three fields:
 - county.properties.COUNTYNAME - The name of the county
 - county.properties.COUNTYID - The character specifying id
 - county.properties.COUNTYCODE - The five digit county code
 
-<a href="#tw.objects.towns" name="tw.objects.towns">#</a> tw.objects<b>towns</b>
+<a href="#tw.objects.towns" name="tw.objects.towns">#</a> tw.objects<b>.towns</b>
 
-<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/towns.svg" width="130.09" height="178.35">
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/towns.png" width="100%">
 
 The town object has three fields in addition to the county fields:
 - town.properties.TOWNNAME - The name of the county
 - town.properties.TOWNID - The character specifying id
 - town.properties.TOWNCODE - The eight digit county code
 
-<a href="#tw.objects.villages" name="tw.objects.villages">#</a> tw.objects<b>villages</b>
+<a href="#tw.objects.villages" name="tw.objects.villages">#</a> tw.objects<b>.villages</b>
 
-<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/villages.svg" width="130.09" height="178.35">
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/villages.png" width="100%">
 
 The village object has three fields in addition to the town and county fields:
 - village.properties.VILLNAME - The name of the village

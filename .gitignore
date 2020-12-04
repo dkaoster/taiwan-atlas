@@ -5,3 +5,4 @@ base.json
 base-mercator.json
 *.es.js
 *.cjs.js
+*.svg
