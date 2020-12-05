@@ -47,7 +47,7 @@ mapshaper -i villages-10t.json -drop target=towns,villages -o format=topojson ta
 mapshaper -i villages-10t.json -drop target=towns,villages,counties -o format=topojson target=* nation-10t.json
 
 # Generate mercator projections
-geo2topo -q 1e8 -n villages=<( \
+geo2topo -q 1e7 -n villages=<( \
     shp2json -n --encoding=UTF-8 build/VILLAGE*.shp \
       | ndjson-filter '!!d.properties.VILLNAME' \
       | ndjson-map '(delete d.properties.NOTE, d)' \
@@ -55,7 +55,7 @@ geo2topo -q 1e8 -n villages=<( \
   | topomerge towns=villages -k 'd.properties.TOWNCODE' \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
-  | toposimplify -f -s 1e-8 \
+  | toposimplify -f -s 1e-6 \
   > base-mercator.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
