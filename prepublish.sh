@@ -11,17 +11,43 @@ villageShpUrl=$(curl -Ls https://data.gov.tw/dataset/7438 | \
   # get the href tag
   sed -E 's/.*href="([^"]+).*/\1/g')
 
+# Town URL
+townShpUrl=$(curl -Ls https://data.gov.tw/dataset/7441 | \
+  # Find the link that has the SHP tag
+  grep -io '<a[^<]*SHP</a>' | \
+  # get the href tag
+  sed -E 's/.*href="([^"]+).*/\1/g')
+
+# County URL
+countyShpUrl=$(curl -Ls https://data.gov.tw/dataset/7442 | \
+  # Find the link that has the SHP tag
+  grep -io '<a[^<]*SHP</a>' | \
+  # get the href tag
+  sed -E 's/.*href="([^"]+).*/\1/g')
+
 # Download and extract the archives
-if [ ! -f build/*.shp ]; then
+if [ ! -f build/village.zip ]; then
   curl -Lo build/village.zip "${villageShpUrl}"
   unzip -od build build/village.zip
+fi
+
+# Download and extract the archives
+if [ ! -f build/town.zip ]; then
+  curl -Lo build/town.zip "${townShpUrl}"
+  unzip -od build build/town.zip
+fi
+
+# Download and extract the archives
+if [ ! -f build/county.zip ]; then
+  curl -Lo build/county.zip "${countyShpUrl}"
+  unzip -od build build/county.zip
 fi
 
 ###############################################################################
 # Generate topojson files
 
 # Boundaries for everything we care about
-bbox=117.663,21.577,122.885,26.671
+bbox=117.663,21.577,122.0202,26.671
 
 # Village file
 geo2topo -q 1e10 -n villages=<( \
@@ -32,24 +58,43 @@ geo2topo -q 1e10 -n villages=<( \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-10 \
-  > base.json
+  > villages-10t.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
-mapshaper -i base.json -clip bbox=${bbox} -filter-slivers -o force format=topojson base.json
+mapshaper -i villages-10t.json -clip bbox=${bbox} -filter-slivers -o force format=topojson villages-10t.json
+mapshaper -i villages-10t.json -clean target=* -o force format=topojson villages-10t.json
 
-# Use mapshaper to generate village topojson.
-mapshaper -i base.json -clean target=villages,towns,counties,nation -o format=topojson villages-10t.json
+# Town file
+geo2topo -q 1e10 -n towns=<( \
+    shp2json -n --encoding=UTF-8 build/TOWN*.shp \
+      | ndjson-filter '!!d.properties.TOWNNAME' \
+      | ndjson-map '(delete d.properties.NOTE, d)') \
+  | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
+  | topomerge nation=counties \
+  | toposimplify -f -s 1e-10 \
+  > towns-10t.json
 
-# Use mapshaper to remove layers of detail we don't want for towns
-mapshaper -i villages-10t.json -drop target=villages -o format=topojson target=* towns-10t.json
+# Use mapshaper to remove extra slivers and islands outside of the boundaries.
+mapshaper -i towns-10t.json -clip bbox=${bbox} -filter-slivers -o force format=topojson towns-10t.json
+mapshaper -i towns-10t.json -clean target=* -o force format=topojson towns-10t.json
 
-# Use mapshaper to remove layers of detail we don't want for counties
-mapshaper -i villages-10t.json -drop target=towns,villages -o format=topojson target=* counties-10t.json
+# County file
+geo2topo -q 1e10 -n counties=<( \
+    shp2json -n --encoding=UTF-8 build/COUNTY*.shp \
+      | ndjson-filter '!!d.properties.COUNTYNAME' \
+      | ndjson-map '(delete d.properties.NOTE, d)') \
+  | topomerge nation=counties \
+  | toposimplify -f -s 1e-10 \
+  > counties-10t.json
+
+# Use mapshaper to remove extra slivers and islands outside of the boundaries.
+mapshaper -i counties-10t.json -clip bbox=${bbox} -filter-slivers -o force format=topojson counties-10t.json
+mapshaper -i counties-10t.json -clean target=* -o force format=topojson counties-10t.json
 
 # Use mapshaper to remove layers of detail we don't want for nation
-mapshaper -i villages-10t.json -drop target=towns,villages,counties -o format=topojson target=* nation-10t.json
+mapshaper -i counties-10t.json -drop target=counties -o format=topojson target=* nation-10t.json
 
-# Generate mercator projections
+# Village mercator projections
 geo2topo -q 1e7 -n villages=<( \
     shp2json -n --encoding=UTF-8 build/VILLAGE*.shp \
       | ndjson-filter '!!d.properties.VILLNAME' \
@@ -59,19 +104,40 @@ geo2topo -q 1e7 -n villages=<( \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-6 \
-  > base-mercator.json
+  > villages-mercator-10t.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
-mapshaper -i base-mercator.json -filter-slivers -o force format=topojson base-mercator.json
+mapshaper -i villages-mercator-10t.json -filter-slivers -o force format=topojson villages-mercator-10t.json
+mapshaper -i villages-mercator-10t.json -clean target=* -o force format=topojson villages-mercator-10t.json
 
-# Use mapshaper to generate village topojson.
-mapshaper -i base-mercator.json -clean target=villages,towns,counties,nation -o format=topojson villages-mercator-10t.json
+# Town mercator projections
+geo2topo -q 1e7 -n towns=<( \
+    shp2json -n --encoding=UTF-8 build/TOWN*.shp \
+      | ndjson-filter '!!d.properties.TOWNNAME' \
+      | ndjson-map '(delete d.properties.NOTE, d)' \
+      | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
+  | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
+  | topomerge nation=counties \
+  | toposimplify -f -s 1e-6 \
+  > towns-mercator-10t.json
 
-# Use mapshaper to remove layers of detail we don't want for towns
-mapshaper -i villages-mercator-10t.json -drop target=villages -o format=topojson target=* towns-mercator-10t.json
+# Use mapshaper to remove extra slivers and islands outside of the boundaries.
+mapshaper -i towns-mercator-10t.json -filter-slivers -o force format=topojson towns-mercator-10t.json
+mapshaper -i towns-mercator-10t.json -clean target=* -o force format=topojson towns-mercator-10t.json
 
-# Use mapshaper to remove layers of detail we don't want for counties
-mapshaper -i villages-mercator-10t.json -drop target=towns,villages -o format=topojson target=* counties-mercator-10t.json
+# County mercator projections
+geo2topo -q 1e7 -n counties=<( \
+    shp2json -n --encoding=UTF-8 build/COUNTY*.shp \
+      | ndjson-filter '!!d.properties.COUNTYNAME' \
+      | ndjson-map '(delete d.properties.NOTE, d)' \
+      | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
+  | topomerge nation=counties \
+  | toposimplify -f -s 1e-6 \
+  > counties-mercator-10t.json
+
+# Use mapshaper to remove extra slivers and islands outside of the boundaries.
+mapshaper -i counties-mercator-10t.json -filter-slivers -o force format=topojson counties-mercator-10t.json
+mapshaper -i counties-mercator-10t.json -clean target=* -o force format=topojson counties-mercator-10t.json
 
 # Use mapshaper to remove layers of detail we don't want for nation
-mapshaper -i villages-mercator-10t.json -drop target=towns,villages,counties -o format=topojson target=* nation-mercator-10t.json
+mapshaper -i counties-mercator-10t.json -drop target=counties -o format=topojson target=* nation-mercator-10t.json
