@@ -35,7 +35,10 @@ geo2topo -q 1e10 -n villages=<( \
   > base.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
-mapshaper -i base.json -clip bbox=${bbox} -filter-slivers -o format=topojson villages-10t.json
+mapshaper -i base.json -clip bbox=${bbox} -filter-slivers -o force format=topojson base.json
+
+# Use mapshaper to generate village topojson.
+mapshaper -i base.json -clean target=villages,towns,counties,nation -o format=topojson villages-10t.json
 
 # Use mapshaper to remove layers of detail we don't want for towns
 mapshaper -i villages-10t.json -drop target=villages -o format=topojson target=* towns-10t.json
@@ -59,7 +62,10 @@ geo2topo -q 1e7 -n villages=<( \
   > base-mercator.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
-mapshaper -i base-mercator.json -filter-slivers -o format=topojson villages-mercator-10t.json
+mapshaper -i base-mercator.json -filter-slivers -o force format=topojson base-mercator.json
+
+# Use mapshaper to generate village topojson.
+mapshaper -i base-mercator.json -clean target=villages,towns,counties,nation -o format=topojson villages-mercator-10t.json
 
 # Use mapshaper to remove layers of detail we don't want for towns
 mapshaper -i villages-mercator-10t.json -drop target=villages -o format=topojson target=* towns-mercator-10t.json
