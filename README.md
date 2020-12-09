@@ -42,14 +42,17 @@ A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master
 
 <img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/nation.png" width="50%">
 
-The nation object has no fields.
+The nation object has two fields:
+- nation.properties.ID - "TW"
+- nation.properties.NAME - "Taiwan"
 
 <a href="#tw.objects.counties" name="tw.objects.counties">#</a> tw.objects<b>.counties</b>
 
 <img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/counties.png" width="50%">
 
-The county object has three fields:
-- county.properties.COUNTYNAME - The name of the county
+The county object has the following fields:
+- county.properties.COUNTYNAME - The name of the county in Chinese
+- county.properties.COUNTYENG - The name of the county in English
 - county.properties.COUNTYID - The character specifying id
 - county.properties.COUNTYCODE - The five digit county code
 
@@ -57,8 +60,9 @@ The county object has three fields:
 
 <img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/towns.png" width="50%">
 
-The town object has three fields in addition to the county fields:
-- town.properties.TOWNNAME - The name of the county
+The town object has the following fields in addition to the county fields:
+- town.properties.TOWNNAME - The name of the county in Chinese
+- town.properties.TOWNENG - The name of the county in English
 - town.properties.TOWNID - The character specifying id
 - town.properties.TOWNCODE - The eight digit county code
 
@@ -66,8 +70,9 @@ The town object has three fields in addition to the county fields:
 
 <img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/villages.png" width="50%">
 
-The village object has three fields in addition to the town and county fields:
-- village.properties.VILLNAME - The name of the village
+The village object has the following fields in addition to the town and county fields:
+- village.properties.VILLNAME - The name of the village in Chinese
+- village.properties.VILLENG - The name of the village in English
 - village.properties.VILLID - The village specifying id
 - village.properties.VILLCODE - The 11 digit county code
 
