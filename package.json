@@ -42,6 +42,7 @@
     "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
+    "globby": "^11.0.1",
     "mapshaper": "^0.5.26",
     "ndjson-cli": "^0.3.1",
     "rimraf": "^3.0.2",

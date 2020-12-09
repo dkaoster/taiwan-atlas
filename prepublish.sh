@@ -52,12 +52,12 @@ bbox=117.663,21.577,122.0202,26.671
 # Village file
 geo2topo -q 1e10 -n villages=<( \
     shp2json -n --encoding=UTF-8 build/VILLAGE*.shp \
-      | ndjson-filter '!!d.properties.VILLNAME' \
-      | ndjson-map '(delete d.properties.NOTE, d)') \
+      | ndjson-filter '!!d.properties.VILLNAME') \
   | topomerge towns=villages -k 'd.properties.TOWNCODE' \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-10 \
+  | node ./properties.js \
   > villages-10t.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
@@ -67,11 +67,11 @@ mapshaper -i villages-10t.json -clean target=* -o force format=topojson villages
 # Town file
 geo2topo -q 1e10 -n towns=<( \
     shp2json -n --encoding=UTF-8 build/TOWN*.shp \
-      | ndjson-filter '!!d.properties.TOWNNAME' \
-      | ndjson-map '(delete d.properties.NOTE, d)') \
+      | ndjson-filter '!!d.properties.TOWNNAME') \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-10 \
+  | node ./properties.js \
   > towns-10t.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
@@ -81,10 +81,10 @@ mapshaper -i towns-10t.json -clean target=* -o force format=topojson towns-10t.j
 # County file
 geo2topo -q 1e10 -n counties=<( \
     shp2json -n --encoding=UTF-8 build/COUNTY*.shp \
-      | ndjson-filter '!!d.properties.COUNTYNAME' \
-      | ndjson-map '(delete d.properties.NOTE, d)') \
+      | ndjson-filter '!!d.properties.COUNTYNAME') \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-10 \
+  | node ./properties.js \
   > counties-10t.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
@@ -98,12 +98,12 @@ mapshaper -i counties-10t.json -drop target=counties -o format=topojson target=*
 geo2topo -q 1e7 -n villages=<( \
     shp2json -n --encoding=UTF-8 build/VILLAGE*.shp \
       | ndjson-filter '!!d.properties.VILLNAME' \
-      | ndjson-map '(delete d.properties.NOTE, d)' \
       | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
   | topomerge towns=villages -k 'd.properties.TOWNCODE' \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-6 \
+  | node ./properties.js \
   > villages-mercator-10t.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
@@ -114,11 +114,11 @@ mapshaper -i villages-mercator-10t.json -clean target=* -o force format=topojson
 geo2topo -q 1e7 -n towns=<( \
     shp2json -n --encoding=UTF-8 build/TOWN*.shp \
       | ndjson-filter '!!d.properties.TOWNNAME' \
-      | ndjson-map '(delete d.properties.NOTE, d)' \
       | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-6 \
+  | node ./properties.js \
   > towns-mercator-10t.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
@@ -129,10 +129,10 @@ mapshaper -i towns-mercator-10t.json -clean target=* -o force format=topojson to
 geo2topo -q 1e7 -n counties=<( \
     shp2json -n --encoding=UTF-8 build/COUNTY*.shp \
       | ndjson-filter '!!d.properties.COUNTYNAME' \
-      | ndjson-map '(delete d.properties.NOTE, d)' \
       | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-6 \
+  | node ./properties.js \
   > counties-mercator-10t.json
 
 # Use mapshaper to remove extra slivers and islands outside of the boundaries.
