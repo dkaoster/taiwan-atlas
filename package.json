@@ -54,6 +54,7 @@
     "topojson-simplify": "^3.0.3"
   },
   "dependencies": {
-    "d3-geo": "^2.0.1"
+    "d3-geo": "^2.0.1",
+    "d3-path": "^2.0.0"
   }
 }

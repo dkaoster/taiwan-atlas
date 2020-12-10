@@ -1,9 +1,11 @@
 /* eslint-disable no-plusplus */
 import { geoMercator } from 'd3-geo';
+import { path } from 'd3-path';
 import { epsilon } from './math';
 import { fitExtent, fitSize } from './fit';
 
 const defaultScale = 10000;
+const defaultCenter = [275, 300];
 
 // Geo coordinates for projection boxes given defaultScale of 10000.
 const geoCoordinates = {
@@ -175,5 +177,33 @@ export default () => {
   mercatorTw.fitExtent = (extent, object) => fitExtent(mercatorTw, extent, object);
   mercatorTw.fitSize = (size, object) => fitSize(mercatorTw, size, object);
 
-  return mercatorTw.scale(defaultScale).translate([275, 300]);
+  mercatorTw.drawCompositionBorders = (context) => {
+    ['penghu', 'lienchiang', 'kinmen', 'wuqiu'].forEach((areaKey) => {
+      context.moveTo(
+        defaultCenter[0] + geoCoordinates[areaKey].offsetX - (geoCoordinates[areaKey].width / 2),
+        defaultCenter[1] + geoCoordinates[areaKey].offsetY - (geoCoordinates[areaKey].height / 2),
+      );
+      context.lineTo(
+        defaultCenter[0] + geoCoordinates[areaKey].offsetX + (geoCoordinates[areaKey].width / 2),
+        defaultCenter[1] + geoCoordinates[areaKey].offsetY - (geoCoordinates[areaKey].height / 2),
+      );
+      context.lineTo(
+        defaultCenter[0] + geoCoordinates[areaKey].offsetX + (geoCoordinates[areaKey].width / 2),
+        defaultCenter[1] + geoCoordinates[areaKey].offsetY + (geoCoordinates[areaKey].height / 2),
+      );
+      context.lineTo(
+        defaultCenter[0] + geoCoordinates[areaKey].offsetX - (geoCoordinates[areaKey].width / 2),
+        defaultCenter[1] + geoCoordinates[areaKey].offsetY + (geoCoordinates[areaKey].height / 2),
+      );
+      context.closePath();
+    });
+  };
+
+  mercatorTw.getCompositionBorders = () => {
+    const context = path();
+    mercatorTw.drawCompositionBorders(context);
+    return context.toString();
+  };
+
+  return mercatorTw.scale(defaultScale).translate(defaultCenter);
 };
