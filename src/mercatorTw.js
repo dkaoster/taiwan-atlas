@@ -13,16 +13,16 @@ const geoCoordinates = {
     width: 360, height: 600, offsetX: 0, offsetY: 0,
   },
   penghu: {
-    width: 90, height: 90, offsetX: -210, offsetY: 180,
+    width: 90, height: 110, offsetX: -210, offsetY: 180,
   },
   kinmen: {
-    width: 120, height: 60, offsetX: -210, offsetY: 0,
+    width: 120, height: 60, offsetX: -195, offsetY: -110,
   },
   lienchiang: {
-    width: 120, height: 120, offsetX: -180, offsetY: -180,
+    width: 120, height: 120, offsetX: -195, offsetY: -200,
   },
   wuqiu: {
-    width: 30, height: 30, offsetX: -180, offsetY: -15,
+    width: 30, height: 30, offsetX: -150, offsetY: -125,
   },
 };
 
@@ -178,22 +178,28 @@ export default () => {
   mercatorTw.fitSize = (size, object) => fitSize(mercatorTw, size, object);
 
   mercatorTw.drawCompositionBorders = (context) => {
+    const k = mainland.scale();
+    const t = mainland.translate();
+    const x = t[0];
+    const y = t[1];
     ['penghu', 'lienchiang', 'kinmen', 'wuqiu'].forEach((areaKey) => {
+      const areaCenterX = geoCoordinates[areaKey].offsetX;
+      const areaCenterY = geoCoordinates[areaKey].offsetY;
       context.moveTo(
-        defaultCenter[0] + geoCoordinates[areaKey].offsetX - (geoCoordinates[areaKey].width / 2),
-        defaultCenter[1] + geoCoordinates[areaKey].offsetY - (geoCoordinates[areaKey].height / 2),
+        x + ((areaCenterX - (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+        y + ((areaCenterY - (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
       );
       context.lineTo(
-        defaultCenter[0] + geoCoordinates[areaKey].offsetX + (geoCoordinates[areaKey].width / 2),
-        defaultCenter[1] + geoCoordinates[areaKey].offsetY - (geoCoordinates[areaKey].height / 2),
+        x + ((areaCenterX + (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+        y + ((areaCenterY - (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
       );
       context.lineTo(
-        defaultCenter[0] + geoCoordinates[areaKey].offsetX + (geoCoordinates[areaKey].width / 2),
-        defaultCenter[1] + geoCoordinates[areaKey].offsetY + (geoCoordinates[areaKey].height / 2),
+        x + ((areaCenterX + (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+        y + ((areaCenterY + (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
       );
       context.lineTo(
-        defaultCenter[0] + geoCoordinates[areaKey].offsetX - (geoCoordinates[areaKey].width / 2),
-        defaultCenter[1] + geoCoordinates[areaKey].offsetY + (geoCoordinates[areaKey].height / 2),
+        x + ((areaCenterX - (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+        y + ((areaCenterY + (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
       );
       context.closePath();
     });
