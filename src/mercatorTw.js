@@ -22,7 +22,7 @@ const geoCoordinates = {
     width: 120, height: 120, offsetX: -195, offsetY: -220,
   },
   wuqiu: {
-    width: 20, height: 20, offsetX: -145, offsetY: -130,
+    width: 30, height: 30, offsetX: -150, offsetY: -125,
   },
 };
 
@@ -47,8 +47,8 @@ export default () => {
 
   // Longitude and latitude coordinates of their centers
   const mainland = geoMercator().rotate([-120.97, -23.60]); let mainlandPoint;
-  const penghu = geoMercator().rotate([-119.54, -23.45]); let penghuPoint;
-  const kinmen = geoMercator().rotate([-118.40, -24.44]); let kinmenPoint;
+  const penghu = geoMercator().rotate([-119.53, -23.47]); let penghuPoint;
+  const kinmen = geoMercator().rotate([-118.38, -24.44]); let kinmenPoint;
   const lienchiang = geoMercator().rotate([-120.22, -26.16]); let lienchiangPoint;
   const wuqiu = geoMercator().rotate([-119.45, -24.98]); let wuqiuPoint;
 
