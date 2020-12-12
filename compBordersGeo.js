@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 const mercatorTw = require('./mercatorTw.cjs.js');
 
 // Initialize Projection
