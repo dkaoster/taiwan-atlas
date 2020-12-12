@@ -6,7 +6,7 @@ topo2geo compBorders=- < nation-mercator-10t.json > img/base-border.json
 # Villages
 topo2geo villages=- < villages-mercator-10t.json > img/base-villages.json
 geojson-merge img/base-villages.json img/base-border.json | geo2svg -o img/villages.svg -w 450 -h 600
-svgexport img/villages.svg img/villages.png 2x "path {stroke-width: 0.2px;}"
+svgexport img/villages.svg img/villages.png 2x "path {stroke-width: 0.3px;}"
 
 # Towns
 topo2geo towns=- < towns-mercator-10t.json > img/base-towns.json
