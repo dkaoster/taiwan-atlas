@@ -95,10 +95,11 @@ mapshaper -i counties-10t.json -clean target=* -o force format=topojson counties
 mapshaper -i counties-10t.json -drop target=counties -o format=topojson target=* nation-10t.json
 
 # Village mercator projections
-geo2topo -q 1e7 -n villages=<( \
-    shp2json -n --encoding=UTF-8 build/VILLAGE*.shp \
-      | ndjson-filter '!!d.properties.VILLNAME' \
-      | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
+geo2topo -q 1e7 -n \
+  villages=<(shp2json -n --encoding=UTF-8 build/VILLAGE*.shp \
+    | ndjson-filter '!!d.properties.VILLNAME' \
+    | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
+  compBorders=<(node compBordersGeo.js) \
   | topomerge towns=villages -k 'd.properties.TOWNCODE' \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
@@ -111,10 +112,11 @@ mapshaper -i villages-mercator-10t.json -filter-slivers -o force format=topojson
 mapshaper -i villages-mercator-10t.json -clean target=* -o force format=topojson villages-mercator-10t.json
 
 # Town mercator projections
-geo2topo -q 1e7 -n towns=<( \
-    shp2json -n --encoding=UTF-8 build/TOWN*.shp \
-      | ndjson-filter '!!d.properties.TOWNNAME' \
-      | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
+geo2topo -q 1e7 -n \
+  towns=<(shp2json -n --encoding=UTF-8 build/TOWN*.shp \
+    | ndjson-filter '!!d.properties.TOWNNAME' \
+    | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
+  compBorders=<(node compBordersGeo.js) \
   | topomerge counties=towns -k 'd.properties.COUNTYCODE' \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-6 \
@@ -126,10 +128,11 @@ mapshaper -i towns-mercator-10t.json -filter-slivers -o force format=topojson to
 mapshaper -i towns-mercator-10t.json -clean target=* -o force format=topojson towns-mercator-10t.json
 
 # County mercator projections
-geo2topo -q 1e7 -n counties=<( \
-    shp2json -n --encoding=UTF-8 build/COUNTY*.shp \
-      | ndjson-filter '!!d.properties.COUNTYNAME' \
-      | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
+geo2topo -q 1e7 -n \
+  counties=<(shp2json -n --encoding=UTF-8 build/COUNTY*.shp \
+    | ndjson-filter '!!d.properties.COUNTYNAME' \
+    | geoproject --require mercatorTw='./mercatorTw.cjs' -n 'mercatorTw()') \
+  compBorders=<(node compBordersGeo.js) \
   | topomerge nation=counties \
   | toposimplify -f -s 1e-6 \
   | node ./properties.js \

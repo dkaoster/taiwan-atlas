@@ -177,34 +177,54 @@ export default () => {
   mercatorTw.fitExtent = (extent, object) => fitExtent(mercatorTw, extent, object);
   mercatorTw.fitSize = (size, object) => fitSize(mercatorTw, size, object);
 
-  mercatorTw.drawCompositionBorders = (context) => {
+  // Get the compositionBorderPoints because we want to export these
+  // for use as generating geojson.
+  mercatorTw.compositionBorderPoints = () => {
     const k = mainland.scale();
     const t = mainland.translate();
     const x = t[0];
     const y = t[1];
-    ['penghu', 'lienchiang', 'kinmen', 'wuqiu'].forEach((areaKey) => {
+
+    return ['penghu', 'lienchiang', 'kinmen', 'wuqiu'].map((areaKey) => {
       const areaCenterX = geoCoordinates[areaKey].offsetX;
       const areaCenterY = geoCoordinates[areaKey].offsetY;
-      context.moveTo(
-        x + ((areaCenterX - (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
-        y + ((areaCenterY - (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
-      );
-      context.lineTo(
-        x + ((areaCenterX + (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
-        y + ((areaCenterY - (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
-      );
-      context.lineTo(
-        x + ((areaCenterX + (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
-        y + ((areaCenterY + (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
-      );
-      context.lineTo(
-        x + ((areaCenterX - (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
-        y + ((areaCenterY + (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
-      );
-      context.closePath();
+      return {name: areaKey, coords: [
+        [
+          x + ((areaCenterX - (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+          y + ((areaCenterY - (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
+        ],
+        [
+          x + ((areaCenterX + (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+          y + ((areaCenterY - (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
+        ],
+        [
+          x + ((areaCenterX + (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+          y + ((areaCenterY + (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
+        ],
+        [
+          x + ((areaCenterX - (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+          y + ((areaCenterY + (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
+        ],
+        [
+          x + ((areaCenterX - (geoCoordinates[areaKey].width / 2)) / defaultScale) * k,
+          y + ((areaCenterY - (geoCoordinates[areaKey].height / 2)) / defaultScale) * k,
+        ]
+      ]
+    };
+  });
+  }
+
+  // Given a context, draw the borders
+  mercatorTw.drawCompositionBorders = (context) => {
+    mercatorTw.compositionBorderPoints().forEach((areaBorder) => {
+      areaBorder.coords.forEach((coords, i) => {
+        if (i === 0) context.moveTo(...coords);
+        else context.lineTo(...coords)
+      });
     });
   };
 
+  // Returns the compositionBorders as an svg path.
   mercatorTw.getCompositionBorders = () => {
     const context = path();
     mercatorTw.drawCompositionBorders(context);
