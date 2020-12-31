@@ -1,7 +1,7 @@
 {
   "name": "taiwan-atlas",
   "version": "1.0.2",
-  "description": "現成 TopoJSON 來自於中華民國內政部",
+  "description": "Pre-built TopoJSON from the Ministry of the Interior.",
   "main": "mercatorTw.cjs.js",
   "jsnext:main": "mercatorTw.es.js",
   "files": [
