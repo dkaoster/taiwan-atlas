@@ -1,6 +1,6 @@
 {
   "name": "taiwan-atlas",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Pre-built TopoJSON from the Ministry of the Interior.",
   "main": "mercatorTw.cjs.js",
   "jsnext:main": "mercatorTw.es.js",
