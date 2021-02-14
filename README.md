@@ -22,6 +22,14 @@ A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master
 
 A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master/README.md#21-topology-objects) containing the geometry collections <i>towns</i>, <i>counties</i>, and <i>nation</i>. The geometry is quantized, simplified, and projected with the mercatorTw projection. This topology is derived from the Ministry of the Interior’s [鄉鎮市區界線(TWD97經緯度)](https://data.gov.tw/dataset/7441). The county boundaries are computed by [merging](https://github.com/topojson/topojson-client/blob/master/README.md#merge) towns and the nation boundaries by merging counties, ensuring a consistent topology. This file also contains a compBorders object for optionally drawing the borders of the composed areas.
 
+<a href="#districts-10t.json" name="districts-10t.json">#</a> <b>districts-10t.json</b> · [Download](https://cdn.jsdelivr.net/npm/taiwan-atlas/districts-10t.json "Source")
+
+A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master/README.md#21-topology-objects) containing the geometry collections <i>districts</i> specifying legislative districts, <i>counties</i>, and <i>nation</i>. The geometry is quantized and simplified, but not projected. This topology is derived from the Ministry of the Interior’s [鄉鎮市區界線(TWD97經緯度)](https://data.gov.tw/dataset/7441) and combined via the districts specified in [this json file](https://github.com/dkaoster/taiwan-atlas/blob/master/utils/districts.json). The county boundaries are computed by [merging](https://github.com/topojson/topojson-client/blob/master/README.md#merge) districts and the nation boundaries by merging counties, ensuring a consistent topology.
+
+<a href="#districts-mercator-10t.json" name="districts-mercator-10t.json">#</a> <b>districts-mercator-10t.json</b> · [Download](https://cdn.jsdelivr.net/npm/taiwan-atlas/districts-mercator-10t.json "Source")
+
+A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master/README.md#21-topology-objects) containing the geometry collections <i>districts</i> specifying legislative districts, <i>counties</i>, and <i>nation</i>. The geometry is quantized, simplified, and projected with the mercatorTw projection. This topology is derived from the Ministry of the Interior’s [鄉鎮市區界線(TWD97經緯度)](https://data.gov.tw/dataset/7441) and combined via the districts specified in [this json file](https://github.com/dkaoster/taiwan-atlas/blob/master/utils/districts.json). The county boundaries are computed by [merging](https://github.com/topojson/topojson-client/blob/master/README.md#merge) districts and the nation boundaries by merging counties, ensuring a consistent topology. This file also contains a compBorders object for optionally drawing the borders of the composed areas.
+
 <a href="#counties-10t.json" name="counties-10t.json">#</a> <b>counties-10t.json</b> · [Download](https://cdn.jsdelivr.net/npm/taiwan-atlas/counties-10t.json "Source")
 
 A [TopoJSON file](https://github.com/topojson/topojson-specification/blob/master/README.md#21-topology-objects) containing the geometry collections <i>counties</i>, and <i>nation</i>. The geometry is quantized and simplified, but not projected. This topology is derived from the Ministry of the Interior’s [直轄市、縣市界線(TWD97經緯度)](https://data.gov.tw/dataset/7442). The nation boundaries are computed by [merging](https://github.com/topojson/topojson-client/blob/master/README.md#merge) counties, ensuring a consistent topology.
@@ -65,6 +73,13 @@ The town object has the following fields in addition to the county fields:
 - town.properties.TOWNENG - The name of the county in English
 - town.properties.TOWNID - The character specifying id
 - town.properties.TOWNCODE - The eight digit county code
+
+<a href="#tw.objects.districts" name="tw.objects.districts">#</a> tw.objects<b>.districts</b>
+
+<img src="https://raw.githubusercontent.com/dkaoster/taiwan-atlas/master/img/districts.png" width="50%">
+
+The district object has the following fields in addition to the county fields:
+- district.properties.DISTRICTCODE - The eight digit county code dash (-) the district number
 
 <a href="#tw.objects.villages" name="tw.objects.villages">#</a> tw.objects<b>.villages</b>
 
