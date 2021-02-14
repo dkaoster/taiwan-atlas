@@ -1,5 +1,6 @@
 const shapefile = require('shapefile');
 const globby = require('globby');
+const districts = require('./utils/districts.json');
 
 // Parse the piped in topojson
 function parseInput() {
@@ -35,6 +36,19 @@ function output([topology, towns, counties]) {
       village.properties = fixTai(village.properties);
       village.properties.TOWNENG = townsMap.get(village.properties.TOWNCODE).TOWNENG;
       village.properties.COUNTYENG = countiesMap.get(village.properties.COUNTYCODE).COUNTYENG;
+
+      // If we are generating districts, add DISTRICTCODE into properties
+      if (process.env.DISTRICTS === 'true') {
+        Object.keys(districts).forEach((countyId) => {
+          Object.keys(districts[countyId]).forEach((districtId) => {
+            if (
+              districts[countyId][districtId].indexOf(village.properties.VILLCODE) >= 0
+              || districts[countyId][districtId].indexOf(village.properties.TOWNCODE) >= 0
+              || districts[countyId][districtId].indexOf(village.properties.COUNTYCODE) >= 0
+            ) village.properties.DISTRICTCODE = `${countyId}-${districtId}`;
+          });
+        });
+      }
       delete village.properties.NOTE;
     }
   }
@@ -61,7 +75,7 @@ function output([topology, towns, counties]) {
   }
 
   // Add nation properties
-  if (topology.objects.nation.geometries) {
+  if (topology.objects.nation && topology.objects.nation.geometries) {
     topology.objects.nation.geometries[0].properties = { ID: 'TW', NAME: 'Taiwan' };
   }
 
