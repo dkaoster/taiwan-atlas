@@ -148,7 +148,8 @@ export default () => {
     // determine where to clip.
     mainlandPoint = mainland
       .translate(genTranslate(geoCoordinates.mainland))
-      .clipExtent(genClipExtent(geoCoordinates.mainland))
+      // Removing clipExtent in case we want points outside this extent
+      // .clipExtent(genClipExtent(geoCoordinates.mainland))
       .stream(pointStream);
 
     penghuPoint = penghu
