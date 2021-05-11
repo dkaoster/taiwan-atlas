@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 rm -rvf *-10t.json base.json
 mkdir -p build
 
